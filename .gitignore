@@ -1,0 +1,9 @@
+.DS_Store
+build/
+build-*/
+cmake_build_*/
+sdkconfig.old
+dependencies.lock
+managed_components/*
+
+.idea/
