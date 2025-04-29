@@ -13,7 +13,7 @@
 
 #include "hal_pin.hh"
 
-void hal::Display::Begin() {
+hal::Display::Display() {
   spi_bus_config_t buscfg{};
   buscfg.sclk_io_num = 4;
   buscfg.mosi_io_num = 5;

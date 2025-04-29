@@ -3,7 +3,6 @@
 
 #include <esp_lcd_types.h>
 #include <lvgl.h>
-#include <esp_lvgl_port.h>
 
 #include "hal_pin.hh"
 
@@ -16,7 +15,7 @@ namespace hal {
 
     bool backlight{false};
 
-    void Begin();
+    Display();
 
     void Backlight(bool on);
   };
