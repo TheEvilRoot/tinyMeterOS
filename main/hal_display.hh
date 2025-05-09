@@ -1,5 +1,5 @@
-#ifndef NFCSWITCHOS_HAL_DISPLAY_HH
-#define NFCSWITCHOS_HAL_DISPLAY_HH
+#ifndef HAL_DISPLAY_H
+#define HAL_DISPLAY_H
 
 #include <esp_lcd_types.h>
 #include <lvgl.h>
@@ -22,4 +22,4 @@ namespace hal {
 }
 
 
-#endif //NFCSWITCHOS_HAL_DISPLAY_HH
+#endif // HAL_DISPLAY_H

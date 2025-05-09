@@ -22,19 +22,19 @@ hal::Display::Display() {
   buscfg.quadhd_io_num = -1;
   buscfg.max_transfer_sz = 280 * 240;
   buscfg.flags = 0;
-  ESP_ERROR_CHECK(spi_bus_initialize(SPI3_HOST, &buscfg, SPI_DMA_DISABLED)); // Enable the DMA feature
+  ESP_ERROR_CHECK(spi_bus_initialize(SPI2_HOST, &buscfg, SPI_DMA_DISABLED)); // Enable the DMA feature
 
   esp_lcd_panel_io_handle_t io_handle{};
   esp_lcd_panel_io_spi_config_t io_config{};
   io_config.dc_gpio_num = 2;
   io_config.cs_gpio_num = 3;
-  io_config.pclk_hz = SPI_MASTER_FREQ_40M;
+  io_config.pclk_hz = SPI_MASTER_FREQ_80M;
   io_config.lcd_cmd_bits = 8;
   io_config.lcd_param_bits = 8;
   io_config.spi_mode = 3;
   io_config.trans_queue_depth = 10;
   // Attach the LCD to the SPI bus
-  ESP_ERROR_CHECK(esp_lcd_new_panel_io_spi(SPI3_HOST, &io_config, &io_handle));
+  ESP_ERROR_CHECK(esp_lcd_new_panel_io_spi(SPI2_HOST, &io_config, &io_handle));
 
   esp_lcd_panel_dev_config_t panel_config{};
   panel_config.reset_gpio_num = 6;
@@ -46,6 +46,7 @@ hal::Display::Display() {
 
   ESP_ERROR_CHECK(esp_lcd_panel_reset(panel_handle));
   ESP_ERROR_CHECK(esp_lcd_panel_init(panel_handle));
+  ESP_ERROR_CHECK(esp_lcd_panel_invert_color(panel_handle, true));
   ESP_ERROR_CHECK(esp_lcd_panel_disp_on_off(panel_handle, true));
   ESP_ERROR_CHECK(esp_lcd_panel_set_gap(panel_handle, 0, 20));
   lvgl_port_cfg_t lvgl_cfg = ESP_LVGL_PORT_INIT_CONFIG();
@@ -54,7 +55,7 @@ hal::Display::Display() {
   disp_cfg.io_handle = io_handle,
   disp_cfg.panel_handle = panel_handle,
   disp_cfg.buffer_size = 280 * 240,
-  disp_cfg.double_buffer = false,
+  disp_cfg.double_buffer = true,
   disp_cfg.hres = 240,
   disp_cfg.vres = 280,
   disp_cfg.monochrome = false,
