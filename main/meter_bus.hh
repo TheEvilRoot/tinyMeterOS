@@ -5,6 +5,12 @@
 #include "hal_ina_219.hh"
 #include "point.hh"
 
+struct Packet {
+    int32_t voltage{0};
+    int32_t current{0};
+    uint32_t power{0};
+};
+
 struct MeterBus {
     const char* name;
     hal::Ina219 ina;
@@ -26,6 +32,7 @@ struct MeterBus {
     void Update();
 
     [[nodiscard]] Point GetPoint() const;
+    [[nodiscard]] Packet GetPacket() const;
 };
 
 #endif //METER_BUS_HH

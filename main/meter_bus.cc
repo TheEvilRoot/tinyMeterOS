@@ -36,3 +36,12 @@ void MeterBus::Update() {
 Point MeterBus::GetPoint() const {
     return {voltage,current,power};
 }
+
+Packet MeterBus::GetPacket() const {
+    return {
+        .voltage = static_cast<int32_t>(voltage * 1000000),
+        .current = static_cast<int32_t>(current * 1000000),
+        .power = static_cast<uint32_t>(power * 1000000)
+    };
+}
+

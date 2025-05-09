@@ -204,13 +204,14 @@ struct DisplayUi {
                     ESP_LOGE("DisplayUi", "Bad voltage Y:%d V:%u", y, point.voltage);
                     continue;
                 }
-                lv_canvas_set_px(ui.canvas, i - ui.buffer.start, y, lv_color_hex3(0xFF0000));
+                lv_canvas_set_px(ui.canvas, i - ui.buffer.start, y, lv_color_make(255, 255, 0));
                 y = MeterUi::CanvasHeight - 1 - point.CurrentY(MeterUi::CanvasHeight);
                 if (y <= 0 || y >= MeterUi::CanvasHeight) {
                     ESP_LOGE("DisplayUi", "Bad current Y:%d I:%d", y, point.current);
                     continue;
                 }
-                lv_canvas_set_px(ui.canvas, i - ui.buffer.start, MeterUi::CanvasHeight - 1 - point.CurrentY(MeterUi::CanvasHeight), lv_color_hex3(0x00FF00));
+                lv_canvas_set_px(ui.canvas, i - ui.buffer.start, MeterUi::CanvasHeight - 1 - point.CurrentY(MeterUi::CanvasHeight),
+                    lv_color_make(0, 255, 255));
             }
         }
     }
@@ -331,8 +332,24 @@ extern "C" void app_main(void) {
     });
     xTimerStart(statsTimer, 0);
 
+    uint64_t sent = 0;
+    uint64_t ts = 0;
+    float thr = 0;
     while (true) {
-        for (auto& bus : meter.buses) { bus.Update(); }
+        Packet bulk[3]{};
+        for (uint8_t i = 0; i < meter.buses.size(); i++) {
+            meter.buses[i].Update();
+            bulk[i] = meter.buses[i].GetPacket();
+        }
+        sent += sizeof(bulk);
+        constexpr int kSeconds = 10;
+        constexpr float kAlpha = 0.3f;
+        if (ts == 0 || xTaskGetTickCount() - ts > 1000 * kSeconds) {
+            ts = xTaskGetTickCount();
+            thr = (1.0f - kAlpha) * thr + kAlpha * static_cast<float>(sent);
+            ESP_LOGI("Meter", "Sent %llu bytes/s throughput %.1f bytes/s", sent / kSeconds, thr / kSeconds);
+            sent = 0;
+        }
         usleep(50000);
     }
 }
