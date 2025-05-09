@@ -4,4 +4,4 @@ Firmware for [tinyMeter A1000](https://github.com/TheEvilRoot/tinyMeter/tree/v1)
 
 Run with `idf.py flash` or `./idfrun.py /dev/cu.usbmodem-1100` for serial monitoring
 
-![board](files/board.png)
+![board](files/board.jpg)
